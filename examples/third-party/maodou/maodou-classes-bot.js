@@ -157,8 +157,11 @@ async function onMessage(msg) {
         console.log("[New course report]", report)
 
         // only these 2 admin groups will receive report
-        if (room_topic === '毛豆少儿课堂产品开发组' || room_topic === 'Wechaty LiLiLi')
+        if (room_topic === 'Wechaty LiLiLi' )
             sendReportToRoom(report, room_topic)
+
+        // send all report to dev team group for debugging
+        sendReportToRoom(report, '毛豆少儿课堂产品开发组')
 
         // if this message is from a single chatter, just send report back to this chatter
         if (!room_topic)
