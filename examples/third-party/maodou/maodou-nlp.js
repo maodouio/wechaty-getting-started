@@ -74,11 +74,13 @@ function getTimeInResults(results) {
 }
 
 function parseTime(input) {
+    debug('input before recognizeDateTime', input)
 	// no longer using ChiTimeNlp
 	//const time = nlp.parse(input)
 	//return time
 
     var results = Recognizers.recognizeDateTime(input, defaultCulture)
+    debug('results after recognizeDateTime', results)
     var time = null
 
     if (results.length > 0) {

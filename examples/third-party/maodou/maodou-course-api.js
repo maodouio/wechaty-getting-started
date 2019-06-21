@@ -1,6 +1,6 @@
 const { parseTime, parseTitleAndLocation } = require('./maodou-nlp')
 
-const debug = require("debug")("maodou-classes-bot.js")
+const debug = require("debug")("maodou-course-api.js")
 const fetch = require('node-fetch')
 
 function createCourse(originalText, createCallback) {
@@ -91,14 +91,16 @@ async function fetchMaodouAPI(path, postBody, fetchCallback) {
     try {
         let resp = await fetch( url, options )
         let resp_json = await resp.json()
-        if (resp.ok) {
+
+        debug('[resp_json]', resp_json)
+        if (resp_json['errcode'] == 200) {
             // status code = 200, we got it!
             debug('[resp_json.data]', resp_json['data'])
             resText = fetchCallback(resp_json['data'])
         } else {
             // status code = 4XX/5XX, sth wrong with API
-            debug('[resp_json.msg]', resp_json['msg'])
-            resText = 'API ERROR: ' + resp_json['msg']
+            debug('[resp_json.errmsg]', resp_json['errmsg'])
+            resText = 'API ERROR: ' + resp_json['errmsg']
         }
     } catch (err) {
         debug('[err]', err)
