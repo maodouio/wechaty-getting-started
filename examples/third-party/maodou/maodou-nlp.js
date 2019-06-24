@@ -32,7 +32,7 @@ function getTimeInResults(results) {
     var timeStr
     if (time) {
         timeStr = time.resolution.values[0].value
-        if (time.resolution.values[1])  // we prefer the later time for kid's class
+        if (time.resolution.values[1] && time.resolution.values[1] < "23:59:59")  // we prefer the later time for kid's class
             timeStr = time.resolution.values[1].value
     } else {
         time = results.find(x => x.typeName === 'datetimeV2.timerange')
