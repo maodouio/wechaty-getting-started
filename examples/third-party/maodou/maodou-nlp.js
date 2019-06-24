@@ -48,7 +48,11 @@ function getTimeInResults(results) {
         // if results have date and time range, we return start
         result = results.find(x => x.typeName === 'datetimeV2.datetimerange')
         if (result) {
-            datetime = new Date(result.resolution.values[0].start)
+	    if(result.resolution.values[1])
+		datetime = new Date(result.resolution.values[1].start)
+	    else
+		datetime = new Date(result.resolution.values[0].start)
+
             return datetime
         } else
             return // undefined
