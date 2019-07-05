@@ -171,10 +171,6 @@ async function onMessage(msg) {
         var report = makeReport(newCourse)
         console.log("[New course report]", report)
 
-        // only these 2 admin groups will receive report
-        if (room_topic === 'wechaty 小程序PR' )
-            sendReportToRoom(report, room_topic)
-
         //say url for miniprogram
         const linkPayload = new UrlLink({
           description: 'reserve',
@@ -182,6 +178,12 @@ async function onMessage(msg) {
           title: newCourse.title,
           url: newCourse._id
         })
+
+        // only these 2 admin groups will receive report
+        if (room_topic === 'wechaty 小程序PR' ){
+            sendReportToRoom(report, room_topic)
+            sendMiniProgramToRoom(linkPayload, room_topic)
+	}
 
         // send all report to dev team group for debugging
         sendReportToRoom(report, '毛豆少儿课堂产品开发组')
