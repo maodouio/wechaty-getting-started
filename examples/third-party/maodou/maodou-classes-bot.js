@@ -12,6 +12,7 @@ const {
     Wechaty,
     Message,
     config,
+    UrlLink,
 } = require('wechaty')
 const qrTerm = require('qrcode-terminal')
 
@@ -115,6 +116,20 @@ async function sendReportToRoom(report, room_topic) {
 }
 
 /**
+ * send a miniProgram
+ */
+async function sendMiniProgramToRoom(linkPayload, room_topic) {
+  const room = await bot.Room.find({topic: room_topic}) //get the room by topic
+  if (room)
+    console.log('Sending Report to room ', room_topic, 'id:', room.id)
+  else
+    console.log('room_topic ', room_topic, '不存在')
+
+  debug('linkPayload', linkPayload)
+  room.say(linkPayload)
+}
+
+/**
  *
  * Dealing with Messages
  *
@@ -157,15 +172,26 @@ async function onMessage(msg) {
         console.log("[New course report]", report)
 
         // only these 2 admin groups will receive report
-        if (room_topic === 'Wechaty LiLiLi' )
+        if (room_topic === 'wechaty 小程序PR' )
             sendReportToRoom(report, room_topic)
+
+        //say url for miniprogram
+        const linkPayload = new UrlLink({
+          description: 'reserve',
+          thumbnailUrl: 'reserve',
+          title: newCourse.title,
+          url: newCourse._id
+        })
 
         // send all report to dev team group for debugging
         sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
 
         // if this message is from a single chatter, just send report back to this chatter
-        if (!room_topic)
-            msg.say(report)
+        if (!room_topic){
+          msg.say(report)
+          msg.say(linkPayload)
+        }
     })
 }
 
