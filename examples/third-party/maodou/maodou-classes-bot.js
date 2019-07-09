@@ -88,15 +88,14 @@ function onError(e) {
 }
 
 function makeReport(course) {
-    let news = '[课程创建成功通知]\n'
+    let news = '[课程提醒创建成功通知]\n'
 
     let title = '\n标题: ' + course.title + '\n'
     let time = '时间: ' + new Date(course.start_time).toLocaleString() + '\n'
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
 
-    let url = '\n课程链接: https://kid.maodouketang.com/course/' + course._id + '\n'
-    let report = news + title + time + location + notes + url + '\n- microsoft nlp powered'
+    let report = news + title + time + location + notes
 
     return report
 }
@@ -137,7 +136,7 @@ async function sendMiniProgramToRoom(linkPayload, room_topic) {
 async function onMessage(msg) {
     const room = msg.room()
     const from = msg.from()
-
+ 
     if (!from) {
         return
     }

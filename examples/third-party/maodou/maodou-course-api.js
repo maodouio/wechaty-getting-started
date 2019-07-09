@@ -83,7 +83,7 @@ async function fetchMaodouAPI(path, postBody, fetchCallback) {
                 // To get your own 'authorization', please see it in README.md
                 headers: {
                   'Content-Type': 'application/json',
-                  'authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDA5ZjcxYTQyOTg4YjAwMTI2ZmYxYmMiLCJvcGVuSWQiOiJvRHprWTBUTjlfTmNLdXZCYVo1SzhzeE1NZHNzIiwiaWF0IjoxNTYwOTM0MTcwLCJleHAiOjE1NjYxMTgxNzB9.-NtfK62Y1S_EHAkA2Y0j5BW4qtb7IdH2mpq85NUqPuA"
+                  'authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDFmMDM3YmRmZjM3ZTAwMTE0ODJmN2EiLCJvcGVuSWQiOiJvRHprWTBXdXluNWtiNFZLeFNBdlctbFVsLTBNIiwiaWF0IjoxNTYyMzEzNTk1LCJleHAiOjE1Njc0OTc1OTV9.heN04WOd1o3n6CxiyMjHNNN-ErlJaXsmPWcwlouofWQ"
                 }
             }
     debug('fetchMaodouAPI: ', {url}, {options})
