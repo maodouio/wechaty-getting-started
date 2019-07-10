@@ -186,10 +186,10 @@ async function onMessage(msg) {
             })
 
             // only these 2 admin groups will receive report
-            // if (room_topic === 'wechaty 小程序PR' ){
-            //     sendReportToRoom(report, room_topic)
-            //     sendMiniProgramToRoom(linkPayload, room_topic)
-            // }
+             if (room_topic === '毛豆网北京团队' ){
+                 sendReportToRoom(report, room_topic)
+                 sendMiniProgramToRoom(linkPayload, room_topic)
+            }
 
             // send all report to dev team group for debugging
             sendReportToRoom(report, '毛豆少儿课堂产品开发组')
