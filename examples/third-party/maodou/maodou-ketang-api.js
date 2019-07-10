@@ -38,7 +38,11 @@ function createCourseWithLive(originalText, liveId, createCallback) {
     msgText = msgText.replace(/(^\s*)/g, '')
     debug("[-space]", {msgText})
 
-    const time = parseTime(msgText)
+    // add blank space before 号楼
+    var msgText2 = msgText.replace(/号楼/g, '#号楼')
+    console.log('[debug 号楼parser] ==> Time: ', msgText2)
+
+    const time = parseTime(msgText2)
     console.log('[parser] ==> Time: ', {time})
 
     // now we have 'time', next we use bosonnlp to parse for 'title' and 'location'

@@ -164,15 +164,13 @@ async function onMessage(msg) {
     // Now we begin to parse this msg
     let msgText = msg.text()
     debug('[original]', {msgText})
-    console.log(chalk.red('[original]', {msgText}))
+    console.log(chalk.red('[original text]'), {msgText})
 
     const room_topic = room ? await room.topic() : null
 
     // create course using msgText, and send report to wechat admin group
     createLive(msgText, function(liveId) {
-        // debug("[liveId]", liveId)
-        console.log(chalk.blue("[liveId]"), liveId)
-
+        debug("[liveId]", liveId)
         createCourseWithLive(msgText, liveId, function(newCourse){
             // get report from newCourse
             var report = makeReport(newCourse,liveId)
