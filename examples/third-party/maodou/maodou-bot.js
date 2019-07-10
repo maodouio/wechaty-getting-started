@@ -95,7 +95,7 @@ function makeReport(course, live_id) {
     let time = '时间: ' + new Date(course.start_time).toLocaleString() + '\n'
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
-    let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/j4XqUjDYkw'
+    let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
     let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
 
     let report = news + title + time + location + notes + invite_url + admin_url
@@ -190,10 +190,12 @@ async function onMessage(msg) {
                  sendReportToRoom(report, room_topic)
                  sendMiniProgramToRoom(linkPayload, room_topic)
             }
+            else {
+                // send all report to dev team group for debugging
+                sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+                sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+            }
 
-            // send all report to dev team group for debugging
-            sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-            sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
 
             // if this message is from a single chatter, just send report back to this chatter
             if (!room_topic){

@@ -44,6 +44,7 @@ async function createMaodouLive(title, start_time, location, notes, createMaodou
         userId: 'owner', // 必填 需要数据库中加入username
         name: title,  // 必填
         author: '毛豆小助手',
+        // token: '1234567890', //连麦toekn，固定
         intro: notes
     }
 
