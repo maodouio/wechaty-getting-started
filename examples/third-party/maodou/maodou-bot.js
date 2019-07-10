@@ -10,16 +10,17 @@
  */
 const {
     Wechaty,
-    Message,
-    config,
     UrlLink,
 } = require('wechaty')
 const qrTerm = require('qrcode-terminal')
 
 // import Debug from 'debug'
 // const debug = Debug('maodou:api/utils/agenda.js')
-const debug = require("debug")("maodou-classes-bot.js");
-const createCourse = require('./maodou-course-api.js')
+const debug = require("debug")("maodou-live-bot.js")
+const createLive = require('./maodou-live-api.js')
+const createCourseWithLive = require('./maodou-ketang-api.js')
+
+const chalk = require('chalk')
 /*
  * Declare the Bot
  *
@@ -87,15 +88,17 @@ function onError(e) {
     console.error('Bot error:', e)
 }
 
-function makeReport(course) {
+function makeReport(course, live_id) {
     let news = '[课程提醒创建成功通知]\n'
 
     let title = '\n标题: ' + course.title + '\n'
     let time = '时间: ' + new Date(course.start_time).toLocaleString() + '\n'
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
+    let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/j4XqUjDYkw'
+    let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
 
-    let report = news + title + time + location + notes
+    let report = news + title + time + location + notes + invite_url + admin_url
 
     return report
 }
@@ -136,7 +139,7 @@ async function sendMiniProgramToRoom(linkPayload, room_topic) {
 async function onMessage(msg) {
     const room = msg.room()
     const from = msg.from()
- 
+
     if (!from) {
         return
     }
@@ -160,39 +163,44 @@ async function onMessage(msg) {
     // Now we begin to parse this msg
     let msgText = msg.text()
     debug('[original]', {msgText})
+    console.log(chalk.red('[original]', {msgText}))
 
     const room_topic = room ? await room.topic() : null
 
     // create course using msgText, and send report to wechat admin group
-    createCourse(msgText, function(newCourse) {
-        debug("[newCourse]", newCourse)
-        // get report from newCourse
-        var report = makeReport(newCourse)
-        console.log("[New course report]", report)
+    createLive(msgText, function(liveId) {
+        // debug("[liveId]", liveId)
+        console.log(chalk.blue("[liveId]"), liveId)
 
-        //say url for miniprogram
-        const linkPayload = new UrlLink({
-          description: 'reserve',
-          thumbnailUrl: 'reserve',
-          title: newCourse.title,
-          url: newCourse._id
+        createCourseWithLive(msgText, liveId, function(newCourse){
+            // get report from newCourse
+            var report = makeReport(newCourse,liveId)
+            console.log("[New course report]", report)
+
+            //say url for miniprogram
+            const linkPayload = new UrlLink({
+                description: 'reserve',
+                thumbnailUrl: 'reserve',
+                title: newCourse.title,
+                url: newCourse._id
+            })
+
+            // only these 2 admin groups will receive report
+            // if (room_topic === 'wechaty 小程序PR' ){
+            //     sendReportToRoom(report, room_topic)
+            //     sendMiniProgramToRoom(linkPayload, room_topic)
+            // }
+
+            // send all report to dev team group for debugging
+            sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+            sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+
+            // if this message is from a single chatter, just send report back to this chatter
+            if (!room_topic){
+                msg.say(report)
+                msg.say(linkPayload)
+            }
         })
-
-        // only these 2 admin groups will receive report
-        if (room_topic === 'wechaty 小程序PR' ){
-            sendReportToRoom(report, room_topic)
-            sendMiniProgramToRoom(linkPayload, room_topic)
-	}
-
-        // send all report to dev team group for debugging
-        sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
-
-        // if this message is from a single chatter, just send report back to this chatter
-        if (!room_topic){
-          msg.say(report)
-          msg.say(linkPayload)
-        }
     })
 }
 

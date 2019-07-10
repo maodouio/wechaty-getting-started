@@ -1,6 +1,6 @@
 const { parseTime, parseTitleAndLocation } = require('./maodou-nlp')
 
-const debug = require("debug")("maodou-course-api.js")
+const debug = require("debug")("maodou-ketang-api.js")
 const fetch = require('node-fetch')
 
 function createCourse(originalText, createCallback) {
@@ -24,6 +24,33 @@ function createCourse(originalText, createCallback) {
             // title, start_time, location, notes is 4 params to create a new maodou course
             const start_time = time
             const notes = originalText
+            createMaodouCourse(title, start_time, location, notes, createCallback)            
+        })
+    }
+}
+
+function createCourseWithLive(originalText, liveId, createCallback) {
+    // get rid of html tags like <img class="qqemoji qqemoji0"> in case someone use emoji input
+    var msgText = originalText.replace(/<[^>]*>?/gm, '')
+    debug("[-emoji]", {msgText})
+
+    // get rid of blank space in the left
+    msgText = msgText.replace(/(^\s*)/g, '')
+    debug("[-space]", {msgText})
+
+    const time = parseTime(msgText)
+    console.log('[parser] ==> Time: ', {time})
+
+    // now we have 'time', next we use bosonnlp to parse for 'title' and 'location'
+    if (time) {
+        parseTitleAndLocation(msgText, function(title, location) {
+            console.log('[parser] ==> Title: ', {title})
+            console.log('[parser] ==> Location: ', {location})
+
+            // title, start_time, location, notes is 4 params to create a new maodou course
+            const start_time = time
+            const liveUrl = 'https://smh.maodou.io/course/' + liveId
+            const notes = originalText + '\n直播间' + liveUrl
             createMaodouCourse(title, start_time, location, notes, createCallback)            
         })
     }
@@ -109,4 +136,5 @@ async function fetchMaodouAPI(path, postBody, fetchCallback) {
     return resText
 }
 
-module.exports = createCourse
+// module.exports = createCourse
+module.exports = createCourseWithLive
