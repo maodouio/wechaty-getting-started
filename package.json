@@ -34,7 +34,8 @@
     "node-fetch": "^2.6.0",
     "qrcode-terminal": "^0.12.0",
     "read-pkg-up": "^6.0.0",
-    "rx-queue": "^0.8.5"
+    "rx-queue": "^0.8.5",
+    "underscore": "^1.9.1"
   },
   "devDependencies": {
     "@chatie/eslint-config": "^0.6.17",

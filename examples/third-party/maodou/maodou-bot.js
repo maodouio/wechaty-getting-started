@@ -21,6 +21,7 @@ const createLive = require('./maodou-live-api.js')
 const createCourseWithLive = require('./maodou-ketang-api.js')
 
 const chalk = require('chalk')
+const _ = require('underscore')
 /*
  * Declare the Bot
  *
@@ -186,17 +187,20 @@ async function onMessage(msg) {
             })
 
             // only these 2 admin groups will receive report
-             if (room_topic === '毛豆网北京团队' ){
-                 sendReportToRoom(report, room_topic)
-                 sendMiniProgramToRoom(linkPayload, room_topic)
-            }
-            else {
-                // send all report to dev team group for debugging
-                sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-                sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+            //  if (room_topic === '毛豆网北京团队' ){
+            //      sendReportToRoom(report, room_topic)
+            //      sendMiniProgramToRoom(linkPayload, room_topic)
+            // }
+            const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
+            if(_.contains(room_list,room_topic)){
+                console.log(chalk.cyan("[in room list]"), room_topic)
+                sendReportToRoom(report, room_topic)
+                sendMiniProgramToRoom(linkPayload, room_topic)
             }
 
-
+            // send all report to dev team group for debugging
+            sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+            sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
             // if this message is from a single chatter, just send report back to this chatter
             if (!room_topic){
                 msg.say(report)
