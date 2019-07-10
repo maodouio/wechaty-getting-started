@@ -42,6 +42,10 @@ function createCourseWithLive(originalText, liveId, createCallback) {
     var msgText2 = msgText.replace(/号楼/g, '#号楼')
     console.log('[debug 号楼parser] ==> Time: ', msgText2)
 
+    // replace d-d点 to d点-d点
+    var msgText2 = msgText2.replace(/(\d+)\-(\d+)点/g, '$1点-$2点')
+    console.log('[debug d-d点parser] ==> Time: ', msgText2)
+
     const time = parseTime(msgText2)
     console.log('[parser] ==> Time: ', {time})
 
