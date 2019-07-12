@@ -90,16 +90,23 @@ function onError(e) {
 }
 
 function makeReport(course, live_id) {
+    let report
     let news = '[课程提醒创建成功通知]\n'
 
     let title = '\n标题: ' + course.title + '\n'
     let time = '时间: ' + new Date(course.start_time).toLocaleString() + '\n'
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
-    let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
-    let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
 
-    let report = news + title + time + location + notes + invite_url + admin_url
+    if(live_id){
+      let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
+      let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
+
+      report = news + title + time + location + notes + invite_url + admin_url
+    }
+    else{
+      report = news + title + time + location + notes
+    }
 
     return report
 }
@@ -168,43 +175,74 @@ async function onMessage(msg) {
 
     const room_topic = room ? await room.topic() : null
 
-    // create course using msgText, and send report to wechat admin group
-    createLive(msgText, function(liveId) {
+    if(msgText.match(/直播/g)){
+      // create course using msgText, and send report to wechat admin group
+      createLive(msgText, function(liveId) {
         debug("[liveId]", liveId)
+        console.log(chalk.red('匹配到直播关键词，创建直播'), liveId)
         createCourseWithLive(msgText, liveId, function(newCourse){
-            // get report from newCourse
-            var report = makeReport(newCourse,liveId)
-            console.log("[New course report]", report)
+          // get report from newCourse
+          var report = makeReport(newCourse,liveId)
+          console.log("[New course report]", report)
 
-            //say url for miniprogram
-            const linkPayload = new UrlLink({
-                description: 'reserve',
-                thumbnailUrl: 'reserve',
-                title: newCourse.title,
-                url: newCourse._id
-            })
+          //say url for miniprogram
+          const linkPayload = new UrlLink({
+            description: 'reserve',
+            thumbnailUrl: 'reserve',
+            title: newCourse.title,
+            url: newCourse._id
+          })
 
-            // only these 2 admin groups will receive report
-            //  if (room_topic === '毛豆网北京团队' ){
-            //      sendReportToRoom(report, room_topic)
-            //      sendMiniProgramToRoom(linkPayload, room_topic)
-            // }
-            const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
-            if(_.contains(room_list,room_topic)){
-                console.log(chalk.cyan("[in room list]"), room_topic)
-                sendReportToRoom(report, room_topic)
-                sendMiniProgramToRoom(linkPayload, room_topic)
-            }
+          const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
+          if(_.contains(room_list,room_topic)){
+            console.log(chalk.cyan("[in room list]"), room_topic)
+            sendReportToRoom(report, room_topic)
+            sendMiniProgramToRoom(linkPayload, room_topic)
+          }
 
-            // send all report to dev team group for debugging
-            sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-            sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
-            // if this message is from a single chatter, just send report back to this chatter
-            if (!room_topic){
-                msg.say(report)
-                msg.say(linkPayload)
-            }
+          // send all report to dev team group for debugging
+          sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+          sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+          // if this message is from a single chatter, just send report back to this chatter
+          if (!room_topic){
+            msg.say(report)
+            msg.say(linkPayload)
+          }
         })
-    })
+      })
+    }
+    else {
+      console.log(chalk.red('没有匹配到直播关键词'))
+      createCourseWithLive(msgText, null, function(newCourse){
+        // get report from newCourse
+        var report = makeReport(newCourse,null)
+        console.log("[New course report]", report)
+
+        //say url for miniprogram
+        const linkPayload = new UrlLink({
+          description: 'reserve',
+          thumbnailUrl: 'reserve',
+          title: newCourse.title,
+          url: newCourse._id
+        })
+
+        const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
+        if(_.contains(room_list,room_topic)){
+          console.log(chalk.cyan("[in room list]"), room_topic)
+          sendReportToRoom(report, room_topic)
+          sendMiniProgramToRoom(linkPayload, room_topic)
+        }
+
+        // send all report to dev team group for debugging
+        sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+        // if this message is from a single chatter, just send report back to this chatter
+        if (!room_topic){
+          msg.say(report)
+          msg.say(linkPayload)
+        }
+      })
+    }
+
 }
 

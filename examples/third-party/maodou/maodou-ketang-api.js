@@ -24,7 +24,7 @@ function createCourse(originalText, createCallback) {
             // title, start_time, location, notes is 4 params to create a new maodou course
             const start_time = time
             const notes = originalText
-            createMaodouCourse(title, start_time, location, notes, createCallback)            
+            createMaodouCourse(title, start_time, location, notes, createCallback)
         })
     }
 }
@@ -46,6 +46,10 @@ function createCourseWithLive(originalText, liveId, createCallback) {
     var msgText2 = msgText2.replace(/(\d+)\-(\d+)点/g, '$1点-$2点')
     console.log('[debug d-d点parser] ==> Time: ', msgText2)
 
+    // replace ignore 现在
+    var msgText2 = msgText2.replace(/现在/g, '')
+    console.log('[忽略 现在] ==> Time: ', msgText2)
+
     const time = parseTime(msgText2)
     console.log('[parser] ==> Time: ', {time})
 
@@ -57,9 +61,15 @@ function createCourseWithLive(originalText, liveId, createCallback) {
 
             // title, start_time, location, notes is 4 params to create a new maodou course
             const start_time = time
-            const liveUrl = 'https://smh.maodou.io/course/' + liveId
-            const notes = originalText + '\n直播间' + liveUrl
-            createMaodouCourse(title, start_time, location, notes, createCallback)            
+            let notes = ''
+            if(liveId){
+              const liveUrl = 'https://smh.maodou.io/course/' + liveId
+              notes = originalText + '\n直播间' + liveUrl
+            }
+            else {
+              notes = originalText
+            }
+            createMaodouCourse(title, start_time, location, notes, createCallback)
         })
     }
 }
