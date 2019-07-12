@@ -175,6 +175,8 @@ async function onMessage(msg) {
 
     const room_topic = room ? await room.topic() : null
 
+    const reg = /zoom|视频会议|音频会议|演讲|群学习/g
+
     if(msgText.match(/直播/g)){
       // create course using msgText, and send report to wechat admin group
       createLive(msgText, function(liveId) {
@@ -209,6 +211,53 @@ async function onMessage(msg) {
             msg.say(linkPayload)
           }
         })
+      })
+    }
+    else if(msgText.match(reg)){
+      console.log(chalk.red('匹配到会议关键词'))
+      let meeting_url
+      if(msgText.match(/zoom|视频会议/g)){
+        meeting_url = '\n视频会议链接\nhttps://kaihui.maodou.io/j/683175?mode=zoom'
+      }
+      else if(msgText.match(/音频会议/g)){
+        meeting_url = '\n音频会议链接\nhttps://kaihui.maodou.io/j/683175?mode=audio'
+      }
+      else if(msgText.match(/演讲/g)){
+        meeting_url = '\n演讲链接\nhttps://kaihui.maodou.io/j/683175?mode=lecture'
+      }
+      else if(msgText.match(/群学习/g)){
+        meeting_url = '\n群学习链接\nhttps://kaihui.maodou.io/j/683175?mode=qunlearn'
+      }
+
+      createCourseWithLive(msgText, null, function(newCourse){
+        // get report from newCourse
+        var report = makeReport(newCourse,null)
+        report += meeting_url
+        console.log("[New course report]", report)
+
+        //say url for miniprogram
+        const linkPayload = new UrlLink({
+          description: 'reserve',
+          thumbnailUrl: 'reserve',
+          title: newCourse.title,
+          url: newCourse._id
+        })
+
+        const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
+        if(_.contains(room_list,room_topic)){
+          console.log(chalk.cyan("[in room list]"), room_topic)
+          sendReportToRoom(report, room_topic)
+          sendMiniProgramToRoom(linkPayload, room_topic)
+        }
+
+        // send all report to dev team group for debugging
+        sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+        // if this message is from a single chatter, just send report back to this chatter
+        if (!room_topic){
+          msg.say(report)
+          msg.say(linkPayload)
+        }
       })
     }
     else {
