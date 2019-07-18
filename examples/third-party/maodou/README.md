@@ -3,7 +3,8 @@
 This is a third-party bot built using wechaty and [maodouketang courses API](https://api.maodouketang.com).
 
 * To see a preview demo of this bot, you need
-  - simply add "毛豆课堂小助手" ```Wechat ID: maodouedu``` as your wechat friend and send msg to her.
+  - simply add "毛豆课堂小助手" ```Wechat ID: qingfengmingyue2019``` as your wechat friend and send msg to her.
+  - ![毛豆课堂小助手](https://user-images.githubusercontent.com/1249369/61432452-2179d600-a963-11e9-9a2e-230528f0c767.png)
 
 * To run a bot of yourself, you need
   -  ```git clone``` this repo and ```cd wechaty-getting-started/examples/third-party/maodou```
