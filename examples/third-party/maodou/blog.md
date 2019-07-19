@@ -40,7 +40,7 @@ date: '2019-07-18 09:00:00 +0800'
 ## 如何用PadPro实现发送微信小程序
 实现发送小程序改造代码的过程，需要涉及 wechaty，wechaty-puppet和wechaty-puppet-padpro 三个库。关于这三个库的关系，推荐读一下另一位大侠[苏畅](https://github.com/su-chang)写的这篇[Summary of Learning Wechaty and Padpro](https://blog.chatie.io/summary-of-learning-wechaty-and-padpro)，非常清晰的勾画出了从上到下的三个层，即接口层-抽象层-实现层的逻辑关系，这里我就不再赘述，主要说明一下我们所做的代码改动过程。
 
-如果整个改动，涉及的代码修改量很大，为了尽快跑通小程序的流程，经过分析后，发现UrlLink结构，和小程序比较接近。这样我们就不需要动wechaty和wechaty-puppet这两个库，只修改wechaty-puppet-padpro这一个库，大大减轻了工作量。
+要想从上到下整个改动，涉及的代码修改量很大，为了尽快跑通小程序的流程，经过分析后，我们发现UrlLink结构，和小程序比较接近。这样我们就不需要动wechaty和wechaty-puppet这两个库，只修改wechaty-puppet-padpro这一个库，大大减轻了工作量。
 
 Simon的wechaty-puppet-padpro库，对小程序大多数功能都已经实现了，在此基础上，我们先改造了 puppet-padpro.ts文件的`forwardAttachment`函数，该函数调用`generateAttachmentXMLMessageFromRaw`函数，我们把分析出来的小程序xml替换这个函数的内容后，转发小程序成功了，基本流程跑通了。
 
