@@ -498,7 +498,7 @@ padpro中想要发送一个小程序也需要先下载或保存一个小程序�
 
 目前底层发送的xml协议里面，cdnthumbnailurl, aeskey, filekey等字段，都是从已有小程序中提取出来的，后续这里可能还需要继续完善。
 
-![thumbnailUrl](https://user-images.githubusercontent.com/1249369/61436942-7838dd00-a96e-11e9-884c-3306e762f3cf.png)
+![MiniProgramPayload](https://user-images.githubusercontent.com/1249369/61503077-fea1fd00-aa08-11e9-9ecf-18306f2545e7.png)
 
 ### NLP的Help needed
 目前bot采用的NLP Parser是微软提供的[@microsoft/recognizers-text-suite](https://github.com/microsoft/Recognizers-Text)，我们用它实现了从一句话中提取出时间变量，也就是 `const time = parseTime(msgText)` 这样一个简单函数。但微软NLP处理的结果，其实是一个复杂的Json返回值，还需要我们写不少代码来筛选出我们期待的时间结果，这些代码在 [getTimeInResults](https://github.com/maodouio/wechaty-getting-started/blob/master/examples/third-party/maodou/maodou-nlp.js) 这个函数里，显得啰嗦又低级，期待谁能告诉我们一个更美好的 parseTime。
