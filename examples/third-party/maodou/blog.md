@@ -437,8 +437,12 @@ padpro中想要发送一个小程序需要先打开调试开关`PADPRO_LOG='sill
 我们把抓到的底层 xml 协议发到了[这里](https://github.com/Chatie/wechaty/issues/1806)，有兴趣深入研究的朋友可以继续分析这些底层的协议字段。虽然我们猜出了一些关键字段，实现了基本的发送功能，但不知道微信服务器那边会不会监测字段的完整性或者正确性，毕竟通过这样Hack的方法要把bot拉入黑名单也很容易。
 
 ### thumbnailUrl的CDN上传
-目前，如下图显示，appid、title和pagepath都比较容易获得，thumbnailUrl 我们参考了 UrlLink 结构，这块区域的缩略图可以让调用者传入一个图片的 thumbnailUrl ，系统还应该做2个后继的工作，
+一个发送出来的小程序，其视图和接口传入数据的关系，如下图所示
 
+![MiniProgramPayload](https://user-images.githubusercontent.com/1249369/61503077-fea1fd00-aa08-11e9-9ecf-18306f2545e7.png)
+
+目前，appid、description、pagepath、title和username都比较容易获得，thumbnailUrl 我们参考了 UrlLink 结构，这块区域的缩略图可以让调用者传入一个图片的 thumbnailUrl ，底层代码里未来还应该做如下2个后继的工作，目前因为时间关系也还未实现。
+      
 1. 调用 FileBox.fromUrl 获得这个图片文件
 2. 调用微信提供的 CDN 上传文件功能，获得如下的数据结构
 
@@ -456,8 +460,6 @@ padpro中想要发送一个小程序需要先打开调试开关`PADPRO_LOG='sill
 ```
 
 目前底层发送的xml协议里面，cdnthumbnailurl, aeskey, filekey等字段，都是从已有小程序中提取出来的，后续这里可能还需要继续完善。
-
-![MiniProgramPayload](https://user-images.githubusercontent.com/1249369/61503077-fea1fd00-aa08-11e9-9ecf-18306f2545e7.png)
 
 ### NLP的Help needed
 目前bot采用的NLP Parser是微软提供的[@microsoft/recognizers-text-suite](https://github.com/microsoft/Recognizers-Text)，我们用它实现了从一句话中提取出时间变量，也就是 `const time = parseTime(msgText)` 这样一个简单函数。但微软NLP处理的结果，其实是一个复杂的Json返回值，还需要我们写不少代码来筛选出我们期待的时间结果，这些代码在 [getTimeInResults](https://github.com/maodouio/wechaty-getting-started/blob/master/examples/third-party/maodou/maodou-nlp.js) 这个函数里，显得啰嗦又低级，期待谁能告诉我们一个更美好的 parseTime。
