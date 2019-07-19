@@ -429,6 +429,8 @@ padpro中想要发送一个小程序也需要先下载或保存一个小程序�
 4.	将获得到的信息嵌入模板
 5.	得到的XML结构作为messageSendMiniProgram的返回数据
 
+我们把抓到的底层 xml 协议发到了[这里](https://github.com/Chatie/wechaty/issues/1806)，有兴趣深入研究的朋友可以继续分析这些底层的协议字段。虽然我们猜出了一些关键字段，实现了基本的发送功能，但不知道微信服务器那边会不会监测字段的完整性或者正确性，毕竟通过这样Hack的方法要把bot拉入黑名单也很容易。
+
 ### thumbnailUrl的CDN上传
 目前，如下图显示，appid、title和pagepath都比较容易获得，thumbnailUrl 我们参考了 UrlLink 结构，这块区域的缩略图可以让调用者传入一个图片的 thumbnailUrl ，系统还应该做2个后继的工作，
 
