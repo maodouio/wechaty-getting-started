@@ -307,7 +307,7 @@ export interface MiniProgramPayload {
 }
 ```
 
-* 更新 src/puppet.ts ，加入messageMiniProgram接口
+* 更新 src/puppet.ts ，声明 messageMiniProgram 和 messageSendMiniProgram 抽象接口
 
 ```
   public abstract async messageMiniProgram (messageId: string)  : Promise<MiniProgramPayload>
@@ -316,7 +316,7 @@ export interface MiniProgramPayload {
 ```
 
 ### wechaty-puppet-padpro实现层
-* 更新 src/puppet-padpro.ts ，加入messageMiniProgram，messageSendMiniProgram 实现
+* 更新 src/puppet-padpro.ts ，加入 messageMiniProgram，messageSendMiniProgram 的实现
 
 ```
   public async messageSendMiniProgram (
@@ -360,7 +360,7 @@ export interface MiniProgramPayload {
   }
 ```
 
-* 更新 src/pure-function-helpers/app-message-generator.ts，增加generateMiniProgramXMLMessage 的实现
+* 更新 src/pure-function-helpers/app-message-generator.ts，增加 generateMiniProgramXMLMessage 的实现
 
 ```
 export const generateMiniProgramXMLMessage = (payload: MiniProgramPayload): string => {
@@ -422,7 +422,6 @@ export const generateMiniProgramXMLMessage = (payload: MiniProgramPayload): stri
   <commenturl/>`
 }
 ```
-
 
 ## 进一步需要完成的工作
 ### 底层小程序的xml协议分析
