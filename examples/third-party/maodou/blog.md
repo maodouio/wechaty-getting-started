@@ -30,6 +30,11 @@ date: '2019-07-18 09:00:00 +0800'
 
 同时，我们了解到[Simon大侠](https://github.com/lhr0909)已经在puppet-padpro上做了很多这方面的[底层改造工作](https://github.com/xanthous-tech/wechaty-puppet-padpro/commit/057927caf64f4b811b7269adfc18c7c8dec86efd)，就差一点即可实现发送小程序，因为时间关系没能继续完成。于是在他的基础上，我们进行了实验和修改，发现只需要在底层xml协议中加上filekey字段就可以了。随后我发了一个相关的#issue [Send Mini-Program](https://github.com/Chatie/wechaty/issues/1806)，接下来我的同事[@zhaoic](https://github.com/zhaoic)参与完成了后继的开发工作，初步解决了这个问题并提交了代码的PR。
 
+对这次 PR 想仔细了解的可以直接进入下面的3个链接，重要的代码部分我也摘录在本文中，便于给想了解这个工作的人多一些线索。
+* https://github.com/Chatie/wechaty/pull/1822/files
+* https://github.com/Chatie/wechaty-puppet/pull/55/files
+* https://github.com/botorange/wechaty-puppet-padpro/pull/172/files
+
 下面，我就重点介绍一下我们是如何实现发送微信小程序的。
 
 ## 如何用PadPro实现发送微信小程序
@@ -43,11 +48,6 @@ Simon的wechaty-puppet-padpro库，对小程序大多数功能都已经实现了
 通过`urlLinkPayload`传递两个参数，小程序的`title`和`url`。经过测试后，通过`say(urlLink)`，可以实现小程序的发送。
 
 经过了可行性的验证，确认了底层能够发送小程序之后，下面我们就开始在三个库里进行具体的代码和文件的修改工作。
-
-对这次 PR 想仔细了解的可以直接进入下面的3个链接，重要的代码部分摘录在下面。
-* https://github.com/Chatie/wechaty/pull/1822/files
-* https://github.com/Chatie/wechaty-puppet/pull/55/files
-* https://github.com/botorange/wechaty-puppet-padpro/pull/172/files
 
 ### wechaty接口层
 * 新增一个文件 src/user/mini-program.ts ，定义一个新 Class
