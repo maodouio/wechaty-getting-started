@@ -59,19 +59,12 @@ export class MiniProgram {
 
     // TODO: get title/description/thumbnailUrl from url automatically
     const payload: MiniProgramPayload = {
-      aeskey             : 'todo',
       appid              : 'todo',
-      cdnthumbaeskey     : 'todo',
-      cdnthumbheight     : 'todo',
-      cdnthumblength     : 'todo',
-      cdnthumbmd5        : 'todo',
-      cdnthumburl        : 'todo',
-      cdnthumbwidth      : 'todo',
-      filekey            : 'todo',
+      description        : 'todo',
       pagepath           : 'todo',
-      sourcedisplayname  : 'todo',
-      sourceusername     : 'todo',
+      thumbnailurl       : 'todo',
       title              : 'todo',
+      username           : 'todo',
     }
 
     return new MiniProgram(payload)
@@ -83,15 +76,11 @@ export class MiniProgram {
     log.verbose('MiniProgram', 'constructor()')
   }
 
-  // public toString (): string {
-  //   return `MiniProgram<${this.payload.url}>`
-  // }
-
   public appid (): undefined | string {
     return this.payload.appid
   }
 
-  public title (): string {
+  public title (): undefined | string {
     return this.payload.title
   }
 
@@ -99,44 +88,16 @@ export class MiniProgram {
     return this.payload.pagepath
   }
 
-  public cdnthumburl (): undefined | string {
-    return this.payload.cdnthumburl
+  public username (): undefined | string {
+    return this.payload.username
   }
 
-  public cdnthumbmd5 (): undefined | string {
-    return this.payload.cdnthumbmd5
+  public description (): undefined | string {
+    return this.payload.description
   }
 
-  public cdnthumblength (): undefined | string {
-    return this.payload.cdnthumblength
-  }
-
-  public cdnthumbwidth (): undefined | string {
-    return this.payload.cdnthumbwidth
-  }
-
-  public cdnthumbheight (): undefined | string {
-    return this.payload.cdnthumbheight
-  }
-
-  public cdnthumbaeskey (): undefined | string {
-    return this.payload.cdnthumbaeskey
-  }
-
-  public aeskey (): undefined | string {
-    return this.payload.aeskey
-  }
-
-  public sourcedisplayname (): undefined | string {
-    return this.payload.sourcedisplayname
-  }
-
-  public sourceusername (): undefined | string {
-    return this.payload.sourceusername
-  }
-
-  public filekey (): undefined | string {
-    return this.payload.filekey
+  public thumbnailurl (): undefined | string {
+    return this.payload.thumbnailurl
   }
 
 }
@@ -331,19 +292,12 @@ src/user/room.ts
 
 ```
 export interface MiniProgramPayload {
-    appid?              : string,
-    title               : string,
-    pagepath?           : string,
-    cdnthumburl?        : string,
-    cdnthumbmd5?        : string,
-    cdnthumblength?     : string,
-    cdnthumbwidth?      : string,
-    cdnthumbheight?     : string,
-    cdnthumbaeskey?     : string,
-    aeskey?             : string,
-    filekey?            : string,
-    sourceusername?     : string,
-    sourcedisplayname?  : string,
+    appid?          : string,    // optional, appid, get from wechat (mp.weixin.qq.com)
+    description?    : string,    // optional, mini program title
+    pagepath?       : string,    // optional, mini program page path
+    thumbnailurl?   : string,    // optional, default picture, convert to thumbnail
+    title?          : string,    // optional, mini program title
+    username?       : string,    // original ID, get from wechat (mp.weixin.qq.com)
 }
 ```
 
@@ -392,8 +346,6 @@ export interface MiniProgramPayload {
       const appPayload = await appMessageParser(rawPayload)
       if (appPayload) {
         return {
-          title: appPayload.title,
-          pagepath: appPayload.url,
         }
       } else {
         throw new Error('Can not parse miniProgram message payload')
@@ -409,49 +361,49 @@ export const generateMiniProgramXMLMessage = (payload: MiniProgramPayload): stri
   return `
   <appmsg appid="" sdkver="0">
     <title>${payload.title}</title>
-    <des />
-    <action />
+    <des>${payload.description}</des>
+    <action/>
     <type>33</type>
     <showtype>0</showtype>
     <soundtype>0</soundtype>
-    <mediatagname />
-    <messageext />
-    <messageaction />
-    <content />
+    <mediatagname/>
+    <messageext/>
+    <messageaction/>
+    <content/>
     <contentattr>0</contentattr>
     <url>https://mp.weixin.qq.com/mp/waerrpage?appid=${payload.appid}&amp;type=upgrade&amp;upgradetype=3#wechat_redirect</url>
-    <lowurl />
-    <dataurl />
-    <lowdataurl />
+    <lowurl/>
+    <dataurl/>
+    <lowdataurl/>
     <appattach>
       <totallen>0</totallen>
-      <attachid />
-      <emoticonmd5 />
-      <fileext />
-      <cdnthumburl>${payload.cdnthumburl}</cdnthumburl>
-      <cdnthumbmd5>${payload.cdnthumbmd5}</cdnthumbmd5>
-      <cdnthumblength>${payload.cdnthumblength}</cdnthumblength>
-      <cdnthumbwidth>${payload.cdnthumbwidth}</cdnthumbwidth>
-      <cdnthumbheight>${payload.cdnthumbheight}</cdnthumbheight>
-      <cdnthumbaeskey>${payload.cdnthumbaeskey}</cdnthumbaeskey>
-      <aeskey>${payload.aeskey}</aeskey>
+      <attachid/>
+      <emoticonmd5/>
+      <fileext/>
+      <cdnthumburl></cdnthumburl>
+      <cdnthumbmd5></cdnthumbmd5>
+      <cdnthumblength></cdnthumblength>
+      <cdnthumbwidth></cdnthumbwidth>
+      <cdnthumbheight></cdnthumbheight>
+      <cdnthumbaeskey></cdnthumbaeskey>
+      <aeskey></aeskey>
       <encryver>0</encryver>
-      <filekey>${payload.filekey}</filekey>
+      <filekey></filekey>
     </appattach>
-    <extinfo />
-    <sourceusername>${payload.sourceusername}</sourceusername>
-    <sourcedisplayname>${payload.sourcedisplayname}</sourcedisplayname>
-    <thumburl />
-    <md5 />
-    <statextstr />
+    <extinfo/>
+    <sourceusername>${payload.username}@app</sourceusername>
+    <sourcedisplayname>${payload.description}</sourcedisplayname>
+    <thumburl/>
+    <md5/>
+    <statextstr/>
     <weappinfo>
-      <username><![CDATA[${payload.sourceusername}]]></username>
+      <username><![CDATA[${payload.username}@app]]></username>
       <appid><![CDATA[${payload.appid}]]></appid>
       <type>2</type>
-      <version>19</version>
-      <weappiconurl><![CDATA[http://mmbiz.qpic.cn/mmbiz_png/5lFWgxHFPzeu01RyEibY7vb5iceGcpBu9mReAHiaiaoXF7BicEYNSM2HretSX7DUa9CmASvspmiaSPDhIWm4w7nibXlQw/640?wx_fmt=png&wxfrom=200]]></weappiconurl>
-      <pagepath><![CDATA[pages/course/detail/detail.html?id=${payload.pagepath}&userId=5cff40a739b221001136af8a]]></pagepath>
-      <shareId><![CDATA[0_${payload.appid}_898744801_1562231852_0]]></shareId>
+      <version></version>
+      <weappiconurl><![CDATA[]]></weappiconurl>
+      <pagepath><![CDATA[${payload.pagepath}]]></pagepath>
+      <shareId><![CDATA[0_${payload.appid}_858901320_1563444358_0]]></shareId>
       <appservicetype>0</appservicetype>
     </weappinfo>
   </appmsg>
@@ -459,9 +411,9 @@ export const generateMiniProgramXMLMessage = (payload: MiniProgramPayload): stri
   <scene>0</scene>
   <appinfo>
     <version>1</version>
-    <appname></appname>
+    <appname/>
   </appinfo>
-  <commenturl></commenturl>`
+  <commenturl/>`
 }
 ```
 
