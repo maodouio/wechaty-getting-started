@@ -90,7 +90,7 @@ function onError(e) {
 }
 
 //type: live course meeting
-function makeReport(course, report_type, live_id) {
+function makeReport(course, live_id, report_type) {
     let report
     let news = '[课程提醒创建成功通知]\n'
 
@@ -99,13 +99,13 @@ function makeReport(course, report_type, live_id) {
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
 
-    if(report_type = 'live'){
+    if(report_type == 'live'){
       let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
       let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
 
       report = news + title + time + location + notes + invite_url + admin_url
     }
-    else if(report_type = 'course'){
+    else if(report_type == 'course'){
       report = '[毛豆少儿课堂]\n您已成功创建[' + title + ']直播课\n\n' +
                 '直播' + time + '\n' +
                 '直播地址：https://maodouketang.com\n' + 
