@@ -89,7 +89,8 @@ function onError(e) {
     console.error('Bot error:', e)
 }
 
-function makeReport(course, live_id) {
+//type: live course meeting
+function makeReport(course, report_type) {
     let report
     let news = '[课程提醒创建成功通知]\n'
 
@@ -98,11 +99,18 @@ function makeReport(course, live_id) {
     let location = '地点: ' + course.location + '\n'
     let notes = '\n消息原文: \n' + course.notes + '\n'
 
-    if(live_id){
+    if(report_type = 'live'){
       let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
       let admin_url = '\n\n直播间后台链接\nhttps://smh.maodou.io/admin/content/course/' + live_id
 
       report = news + title + time + location + notes + invite_url + admin_url
+    }
+    else if(report_type = 'course'){
+      report = '[毛豆少儿课堂]\n您已成功创建[' + title + ']直播课\n\n' +
+                '直播' + time + '\n' +
+                '直播地址：https://maodouketang.com\n' + 
+                '请您授权手机号并进入后台提前备课\n\n' + 
+                '温馨提示：请您提前安排时间准时开课。' 
     }
     else{
       report = news + title + time + location + notes
@@ -184,7 +192,7 @@ async function onMessage(msg) {
         console.log(chalk.red('匹配到直播关键词，创建直播'), liveId)
         createCourseWithLive(msgText, liveId, function(newCourse){
           // get report from newCourse
-          var report = makeReport(newCourse,liveId)
+          var report = makeReport(newCourse,'live')
           console.log("[New course report]", report)
 
           //say url for miniprogram
@@ -233,6 +241,39 @@ async function onMessage(msg) {
         // get report from newCourse
         var report = makeReport(newCourse,null)
         report += meeting_url
+        console.log("[New course report]", report)
+
+        //say url for miniprogram
+        const linkPayload = new UrlLink({
+          description: 'reserve',
+          thumbnailUrl: 'reserve',
+          title: newCourse.title,
+          url: newCourse._id
+        })
+
+        const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
+        if(_.contains(room_list,room_topic)){
+          console.log(chalk.cyan("[in room list]"), room_topic)
+          sendReportToRoom(report, room_topic)
+          sendMiniProgramToRoom(linkPayload, room_topic)
+        }
+
+        // send all report to dev team group for debugging
+        sendReportToRoom(report, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+        // if this message is from a single chatter, just send report back to this chatter
+        if (!room_topic){
+          msg.say(report)
+          msg.say(linkPayload)
+        }
+      })
+    }
+    else if(msgText.match(/创建课程：|创建课程:/g)){
+      console.log(chalk.red('匹配到创建课程关键词'))
+      createCourseWithLive(msgText, null, function(newCourse){
+        // get report from newCourse
+        var report = makeReport(newCourse,'course')
+        let course_notes = '\n\n'
         console.log("[New course report]", report)
 
         //say url for miniprogram
