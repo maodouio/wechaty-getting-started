@@ -90,7 +90,7 @@ function onError(e) {
 }
 
 //type: live course meeting
-function makeReport(course, report_type) {
+function makeReport(course, report_type, live_id) {
     let report
     let news = '[课程提醒创建成功通知]\n'
 
@@ -192,7 +192,7 @@ async function onMessage(msg) {
         console.log(chalk.red('匹配到直播关键词，创建直播'), liveId)
         createCourseWithLive(msgText, liveId, function(newCourse){
           // get report from newCourse
-          var report = makeReport(newCourse,'live')
+          var report = makeReport(newCourse, liveId, 'live')
           console.log("[New course report]", report)
 
           //say url for miniprogram
@@ -239,7 +239,7 @@ async function onMessage(msg) {
 
       createCourseWithLive(msgText, null, function(newCourse){
         // get report from newCourse
-        var report = makeReport(newCourse,null)
+        var report = makeReport(newCourse, null, null)
         report += meeting_url
         console.log("[New course report]", report)
 
@@ -272,7 +272,7 @@ async function onMessage(msg) {
       console.log(chalk.red('匹配到创建课程关键词'))
       createCourseWithLive(msgText, null, function(newCourse){
         // get report from newCourse
-        var report = makeReport(newCourse,'course')
+        var report = makeReport(newCourse,null,'course')
         let course_notes = '\n\n'
         console.log("[New course report]", report)
 
@@ -305,7 +305,7 @@ async function onMessage(msg) {
       console.log(chalk.red('没有匹配到直播关键词'))
       createCourseWithLive(msgText, null, function(newCourse){
         // get report from newCourse
-        var report = makeReport(newCourse,null)
+        var report = makeReport(newCourse,null,null)
         console.log("[New course report]", report)
 
         //say url for miniprogram
