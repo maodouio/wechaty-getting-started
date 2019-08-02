@@ -10,7 +10,7 @@
  */
 const {
     Wechaty,
-    UrlLink,
+    MiniProgram,
 } = require('wechaty')
 const qrTerm = require('qrcode-terminal')
 
@@ -128,15 +128,15 @@ async function sendReportToRoom(report, room_topic) {
 /**
  * send a miniProgram
  */
-async function sendMiniProgramToRoom(linkPayload, room_topic) {
+async function sendMiniProgramToRoom(miniPayload, room_topic) {
   const room = await bot.Room.find({topic: room_topic}) //get the room by topic
   if (room)
     console.log('Sending Report to room ', room_topic, 'id:', room.id)
   else
     console.log('room_topic ', room_topic, '不存在')
 
-  debug('linkPayload', linkPayload)
-  room.say(linkPayload)
+  console.log('miniPayload', miniPayload)
+  room.say(miniPayload)
 }
 
 /**
@@ -188,27 +188,30 @@ async function onMessage(msg) {
           console.log("[New course report]", report)
 
           //say url for miniprogram
-          const linkPayload = new UrlLink({
-            description: 'reserve',
-            thumbnailUrl: 'reserve',
+          //match 直播
+          const miniPayload = new MiniProgram({  //MiniProgram
+            appid: 'wxe638e634ed8b3907',
+            username: 'gh_a1cd71094745',
             title: newCourse.title,
-            url: newCourse._id
+            pagepath: `pages/course/detail/detail.html?id=${newCourse._id}`,
+            description: '毛豆测试description',
+            thumbnailurl: '',
           })
 
           const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
           if(_.contains(room_list,room_topic)){
             console.log(chalk.cyan("[in room list]"), room_topic)
             sendReportToRoom(report, room_topic)
-            sendMiniProgramToRoom(linkPayload, room_topic)
+            sendMiniProgramToRoom(miniPayload, room_topic)
           }
 
           // send all report to dev team group for debugging
           sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-          sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+          sendMiniProgramToRoom(miniPayload, '毛豆少儿课堂产品开发组')
           // if this message is from a single chatter, just send report back to this chatter
           if (!room_topic){
             msg.say(report)
-            msg.say(linkPayload)
+            msg.say(miniPayload)
           }
         })
       })
@@ -236,27 +239,30 @@ async function onMessage(msg) {
         console.log("[New course report]", report)
 
         //say url for miniprogram
-        const linkPayload = new UrlLink({
-          description: 'reserve',
-          thumbnailUrl: 'reserve',
+        //match 会议
+        const miniPayload = new MiniProgram({ //MiniProgram
+          appid: 'wxe638e634ed8b3907',
+          username: 'gh_a1cd71094745',
           title: newCourse.title,
-          url: newCourse._id
+          pagepath: `pages/course/detail/detail.html?id=${newCourse._id}`,
+          description: '毛豆测试description',
+          thumbnailurl: '',
         })
 
         const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
         if(_.contains(room_list,room_topic)){
           console.log(chalk.cyan("[in room list]"), room_topic)
           sendReportToRoom(report, room_topic)
-          sendMiniProgramToRoom(linkPayload, room_topic)
+          sendMiniProgramToRoom(miniPayload, room_topic)
         }
 
         // send all report to dev team group for debugging
         sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(miniPayload, '毛豆少儿课堂产品开发组')
         // if this message is from a single chatter, just send report back to this chatter
         if (!room_topic){
           msg.say(report)
-          msg.say(linkPayload)
+          msg.say(miniPayload)
         }
       })
     }
@@ -267,28 +273,34 @@ async function onMessage(msg) {
         var report = makeReport(newCourse,null)
         console.log("[New course report]", report)
 
+        let pagePath = 'pages/course/detail/detail.html?id=' + newCourse._id
         //say url for miniprogram
-        const linkPayload = new UrlLink({
-          description: 'reserve',
-          thumbnailUrl: 'reserve',
+        //match 通知 gh_6e0077287377 gh_a1cd71094745
+        console.log(`pages/course/detail/detail.html?id=${newCourse._id}`)
+        console.log(pagePath)
+        const miniPayload = new MiniProgram({  //MiniProgram
+          appid: 'wxe638e634ed8b3907',
+          username: 'gh_a1cd71094745',
           title: newCourse.title,
-          url: newCourse._id
+          pagepath: `pages/course/detail/detail.html?id=${newCourse._id}`,
+          description: '毛豆测试description',
+          thumbnailurl: '',
         })
 
         const room_list = ['毛豆网北京团队', 'wechaty 小程序PR', '毛豆课堂小助手测试群']
         if(_.contains(room_list,room_topic)){
           console.log(chalk.cyan("[in room list]"), room_topic)
           sendReportToRoom(report, room_topic)
-          sendMiniProgramToRoom(linkPayload, room_topic)
+          sendMiniProgramToRoom(miniPayload, room_topic)
         }
 
         // send all report to dev team group for debugging
         sendReportToRoom(report, '毛豆少儿课堂产品开发组')
-        sendMiniProgramToRoom(linkPayload, '毛豆少儿课堂产品开发组')
+        sendMiniProgramToRoom(miniPayload, '毛豆少儿课堂产品开发组')
         // if this message is from a single chatter, just send report back to this chatter
         if (!room_topic){
           msg.say(report)
-          msg.say(linkPayload)
+          msg.say(miniPayload)
         }
       })
     }

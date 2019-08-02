@@ -11,6 +11,7 @@
 const {
     Wechaty,
     UrlLink,
+    MiniProgram,
 } = require('wechaty')
 const qrTerm = require('qrcode-terminal')
 
@@ -169,7 +170,7 @@ async function onMessage(msg) {
         console.log("[New course report]", report)
 
         //say url for miniprogram
-        const linkPayload = new UrlLink({
+        const linkPayload = new MiniProgram({
           description: 'reserve',
           thumbnailUrl: 'reserve',
           title: newCourse.title,
