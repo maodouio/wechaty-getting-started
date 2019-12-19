@@ -97,7 +97,7 @@ function makeReport(course, live_id, report_type) {
     let title = '\n标题: ' + course.title + '\n'
     let time = '时间: ' + new Date(course.start_time).toLocaleString() + '\n'
     let location = '地点: ' + course.location + '\n'
-    let notes = '\n消息原文: \n' + course.notes + '\n'
+    let notes = '\n课程备注: \n' + course.notes + '\n'
 
     if(report_type == 'live'){
       let invite_url = '\n邀请连麦链接\nhttps://smh.maodou.io/invite/' + live_id + '/1234567890'
@@ -108,7 +108,7 @@ function makeReport(course, live_id, report_type) {
     else if(report_type == 'course'){
       report = '[毛豆少儿课堂]\n您已成功创建[' + title + ']直播课\n\n' +
                 '直播' + time + '\n' +
-                '直播地址：https://maodouketang.com\n' + 
+                '直播地址：https://www.maodouketang.com\n' + 
                 '请您授权手机号并进入后台提前备课\n\n' + 
                 '温馨提示：请您提前安排时间准时开课。' 
     }

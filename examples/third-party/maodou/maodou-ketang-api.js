@@ -31,23 +31,25 @@ function createCourse(originalText, createCallback) {
 
 function createCourseWithLive(originalText, liveId, createCallback) {
     // get rid of html tags like <img class="qqemoji qqemoji0"> in case someone use emoji input
-    var msgText = originalText.replace(/<[^>]*>?/gm, '')
-    debug("[-emoji]", {msgText})
+    var msgText = originalText
+    msgText = msgText.replace(/<[^>]*>?/gm, '')
+    console.log("[-emoji]", {msgText})
 
     // get rid of blank space in the left
     msgText = msgText.replace(/(^\s*)/g, '')
-    debug("[-space]", {msgText})
+    console.log("[-space]", {msgText})
 
     // add blank space before 号楼
-    var msgText2 = msgText.replace(/号楼/g, '#号楼')
+     var msgText2 = msgText
+    msgText2 = msgText2.replace(/号楼/g, '#号楼')
     console.log('[debug 号楼parser] ==> Time: ', msgText2)
 
     // replace d-d点 to d点-d点
-    var msgText2 = msgText2.replace(/(\d+)\-(\d+)点/g, '$1点-$2点')
+//     msgText2 = msgText2.replace(/(\d+)\-(\d+)点/g, '$1点-$2点')
     console.log('[debug d-d点parser] ==> Time: ', msgText2)
 
     // replace ignore 现在
-    var msgText2 = msgText2.replace(/现在/g, '')
+     msgText2 = msgText2.replace(/现在/g, '')
     console.log('[忽略 现在] ==> Time: ', msgText2)
 
     const time = parseTime(msgText2)
@@ -128,7 +130,7 @@ async function fetchMaodouAPI(path, postBody, fetchCallback) {
                 // To get your own 'authorization', please see it in README.md
                 headers: {
                   'Content-Type': 'application/json',
-                  'authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZDFmMDM3YmRmZjM3ZTAwMTE0ODJmN2EiLCJvcGVuSWQiOiJvRHprWTBXdXluNWtiNFZLeFNBdlctbFVsLTBNIiwiaWF0IjoxNTYyMzEzNTk1LCJleHAiOjE1Njc0OTc1OTV9.heN04WOd1o3n6CxiyMjHNNN-ErlJaXsmPWcwlouofWQ"
+                  'authorization': "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1Y2ZmNDBhNzM5YjIyMTAwMTEzNmFmOGEiLCJvcGVuSWQiOiJvRHprWTBmQ2V5bFU4dnNjc2dqSDNOZV9fRjdBIiwiaWF0IjoxNTczMTc0OTg5LCJleHAiOjE1NzgzNTg5ODl9.Z948pvSwReVhvAeouTKPufzTd-yWuuMpYG6EiWadQwA"
                 }
             }
     debug('fetchMaodouAPI: ', {url}, {options})
